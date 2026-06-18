@@ -1,0 +1,46 @@
+import numpy as np
+
+def create_aqi_array(values:list)->np.ndarray:
+  return np.array(values,dtype=np.int64)
+
+def validate_aqi_array(arr:np.ndarray)->bool:
+  if arr.size==0:
+    return False
+  return bool(np.all((arr>=0) & (arr<=100)))
+
+def compute_aqi_stats(arr:np.ndarray)->tuple:
+  average=np.mean(arr)
+  standard=np.std(arr)
+  maximum=np.max(arr)
+  minimum=np.min(arr)
+
+  return (round(float(average),2),round(float(standard),2),maximum,minimum)
+
+  def categorize_aqi(arr:np.ndarray)->np.ndarray:
+    cond_list=[
+        (arr>=0) & (arr<=50),
+        (arr>=51) & (arr<=100),
+        (arr>=101) & (arr<=150),
+        (arr>=151) & (arr<=200),
+        (arr>=201) & (arr<=300),
+        (arr>=301) & (arr<=500)
+    ]
+    choice_list=["Good","Moderate","USG","Unhealth","Very Unhealthy","Hazardous"]
+    return np.select(cond_list,choice_list,default="Unknown")
+
+  def longest_unhealthy_streak(arr:np.ndarray)->int:
+    is_unhealthy=arr>=151
+
+    max_streak=0
+    current_streak=0
+
+    for val in is_unhealthy:
+      if val:
+        current_strak+=1
+        if current_streak>max_streak:
+          max_streak=current_streak
+      else:
+        current_streak=0
+    return max_streak
+
+   
